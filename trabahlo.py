@@ -38,11 +38,12 @@ def calcular_media():
 
 
 def buscar_aluno(nome):
+    encontrados = []
     for aluno in alunos:
         if aluno["nome"].lower() == nome.lower():
-            return aluno
+            encontrados.append(aluno)
 
-    return None
+    return encontrados
 
 
 # ============================================
@@ -325,21 +326,24 @@ def consultar_aluno():
 
     nome = input("Digite o nome do aluno: ").strip()
 
-    aluno = buscar_aluno(nome)
+    encontrados = buscar_aluno(nome)
 
-    if aluno is None:
+    if len(encontrados) == 0:
 
         print("Erro: aluno não encontrado.")
 
         return
 
-    nota = aluno["nota"]
+    print(f"\nForam encontrados {len(encontrados)} aluno(s):")
+    for i, aluno in enumerate(encontrados):
 
-    print("\nAluno encontrado:")
-    print(f"Nome: {aluno['nome']}")
-    print(f"Nota: {nota:.2f}")
-    print(f"Situação: {situacao(nota)}")
-    print(f"Desempenho: {desempenho(nota)}")
+        nota = aluno["nota"]
+
+        print("\nAluno encontrado:")
+        print(f"Nome: {aluno['nome']}")
+        print(f"Nota: {aluno['nota']:.2f}")
+        print(f"Situação: {situacao(aluno['nota'])}")
+        print(f"Desempenho: {desempenho(aluno['nota'])}")
 
 
 # ============================================
@@ -358,39 +362,58 @@ def alterar_nota():
 
     nome = input("Digite o nome do aluno: ").strip()
 
-    aluno = buscar_aluno(nome)
+    encontrados = buscar_aluno(nome)
 
-    if aluno is None:
-
+    if len(encontrados) == 0:
         print("Erro: aluno não encontrado.")
-
         return
 
-    print(f"Nota atual: {aluno['nota']:.2f}")
+    if len(encontrados) > 1:
+
+        print("\nForam encontrados vários alunos:")
+
+        for i, aluno in enumerate(encontrados):
+            print(f"{i + 1} - {aluno['nome']} - Nota: {aluno['nota']:.2f}")
+
+        while True:
+            try:
+                escolha = int(input("\nEscolha o número do aluno: "))
+
+                if escolha < 1 or escolha > len(encontrados):
+                    print("Erro: escolha uma opção válida.")
+                    continue
+
+                aluno = encontrados[escolha - 1]
+                break
+
+            except ValueError:
+                print("Erro: digite um número inteiro.")
+
+    else:
+        # Só existe um aluno com esse nome
+        aluno = encontrados[0]
+
+    print(f"\nNota atual: {aluno['nota']:.2f}")
 
     while True:
 
         try:
-
             nova_nota = float(
                 input("Digite a nova nota: ").replace(",", ".")
             )
 
             if nova_nota < 0 or nova_nota > 10:
-
                 print("Erro: a nota deve estar entre 0 e 10.")
-
                 continue
 
             aluno["nota"] = nova_nota
 
             print("Nota alterada com sucesso!")
-
             break
 
         except ValueError:
-
             print("Erro: digite uma nota válida.")
+
 
 
 # ============================================
