@@ -2,11 +2,6 @@ import statistics
 
 alunos = []
 
-
-# ============================================
-# FUNÇÕES AUXILIARES
-# ============================================
-
 def situacao(nota):
     if nota >= 6:
         return "Aprovado"
@@ -39,6 +34,7 @@ def calcular_media():
 
 def buscar_aluno(nome):
     encontrados = []
+
     for aluno in alunos:
         if aluno["nome"].lower() == nome.lower():
             encontrados.append(aluno)
@@ -46,12 +42,42 @@ def buscar_aluno(nome):
     return encontrados
 
 
-# ============================================
-# 1 - CADASTRAR ALUNOS
-# ============================================
+def selecionar_aluno():
+    if len(alunos) == 0:
+        print("Nenhum aluno cadastrado.")
+        return None
+
+    nome = input("Digite o nome do aluno: ").strip()
+
+    encontrados = buscar_aluno(nome)
+
+    if len(encontrados) == 0:
+        print("Erro: aluno não encontrado.")
+        return None
+
+    if len(encontrados) == 1:
+        return encontrados[0]
+
+    print("\nForam encontrados vários alunos:")
+
+    for i, aluno in enumerate(encontrados):
+        print(f"{i + 1} - {aluno['nome']} - Nota: {aluno['nota']:.2f}")
+
+    while True:
+        try:
+            escolha = int(input("\nEscolha o número do aluno: "))
+
+            if escolha < 1 or escolha > len(encontrados):
+                print("Erro: escolha uma opção válida.")
+                continue
+
+            return encontrados[escolha - 1]
+
+        except ValueError:
+            print("Erro: digite um número inteiro.")
+
 
 def cadastrar_alunos():
-
     print("\n========================================")
     print("CADASTRO DE ALUNOS")
     print("========================================")
@@ -70,7 +96,6 @@ def cadastrar_alunos():
             print("Erro: digite um número inteiro.")
 
     for i in range(quantidade):
-
         print(f"\nAluno {i + 1}")
 
         while True:
@@ -104,12 +129,7 @@ def cadastrar_alunos():
         print("Aluno cadastrado com sucesso!")
 
 
-# ============================================
-# 2 - LISTAR ALUNOS
-# ============================================
-
 def listar_alunos():
-
     print("\n========================================")
     print("LISTA DE ALUNOS")
     print("========================================")
@@ -119,7 +139,6 @@ def listar_alunos():
         return
 
     for aluno in alunos:
-
         nota = aluno["nota"]
 
         print(f"\nNome: {aluno['nome']}")
@@ -129,12 +148,7 @@ def listar_alunos():
         print("----------------------------------------")
 
 
-# ============================================
-# 3 - ESTATÍSTICAS DA TURMA
-# ============================================
-
 def estatisticas():
-
     print("\n========================================")
     print("ESTATÍSTICAS DA TURMA")
     print("========================================")
@@ -149,7 +163,6 @@ def estatisticas():
     reprovados = 0
 
     for aluno in alunos:
-
         notas.append(aluno["nota"])
 
         if aluno["nota"] >= 6:
@@ -160,17 +173,11 @@ def estatisticas():
     total = len(alunos)
 
     media = sum(notas) / total
-
     maior_nota = max(notas)
-
     menor_nota = min(notas)
-
     mediana = statistics.median(notas)
-
     amplitude = maior_nota - menor_nota
-
     percentual_aprovacao = (aprovados / total) * 100
-
     percentual_reprovacao = (reprovados / total) * 100
 
     print(f"Total de alunos: {total}")
@@ -185,12 +192,7 @@ def estatisticas():
     print(f"Percentual de reprovação: {percentual_reprovacao:.2f}%")
 
 
-# ============================================
-# 4 - ALUNOS ACIMA DA MÉDIA
-# ============================================
-
 def alunos_acima_media():
-
     print("\n========================================")
     print("ALUNOS ACIMA DA MÉDIA")
     print("========================================")
@@ -206,23 +208,15 @@ def alunos_acima_media():
     encontrou = False
 
     for aluno in alunos:
-
         if aluno["nota"] > media:
-
             print(f"{aluno['nome']} - {aluno['nota']:.2f}")
-
             encontrou = True
 
     if encontrou == False:
         print("Nenhum aluno ficou acima da média da turma.")
 
 
-# ============================================
-# 5 - DISTRIBUIÇÃO DAS NOTAS
-# ============================================
-
 def distribuicao_notas():
-
     print("\n========================================")
     print("DISTRIBUIÇÃO DAS NOTAS")
     print("========================================")
@@ -238,21 +232,16 @@ def distribuicao_notas():
     faixa5 = 0
 
     for aluno in alunos:
-
         nota = aluno["nota"]
 
         if nota < 3:
             faixa1 += 1
-
         elif nota < 5:
             faixa2 += 1
-
         elif nota < 6:
             faixa3 += 1
-
         elif nota < 8:
             faixa4 += 1
-
         else:
             faixa5 += 1
 
@@ -263,12 +252,7 @@ def distribuicao_notas():
     print(f"8,0 - 10,0 : {faixa5} aluno(s)")
 
 
-# ============================================
-# 6 - RANKING DA TURMA
-# ============================================
-
 def ranking():
-
     print("\n========================================")
     print("RANKING DA TURMA")
     print("========================================")
@@ -284,7 +268,6 @@ def ranking():
     )
 
     for i in range(len(ranking_alunos)):
-
         aluno = ranking_alunos[i]
 
         print(
@@ -300,7 +283,6 @@ def ranking():
     quantidade_top = min(3, len(ranking_alunos))
 
     for i in range(quantidade_top):
-
         aluno = ranking_alunos[i]
 
         print(
@@ -310,12 +292,7 @@ def ranking():
         )
 
 
-# ============================================
-# 7 - CONSULTAR ALUNO
-# ============================================
-
 def consultar_aluno():
-
     print("\n========================================")
     print("CONSULTAR ALUNO")
     print("========================================")
@@ -329,74 +306,35 @@ def consultar_aluno():
     encontrados = buscar_aluno(nome)
 
     if len(encontrados) == 0:
-
         print("Erro: aluno não encontrado.")
-
         return
 
     print(f"\nForam encontrados {len(encontrados)} aluno(s):")
-    for i, aluno in enumerate(encontrados):
 
+    for aluno in encontrados:
         nota = aluno["nota"]
 
         print("\nAluno encontrado:")
         print(f"Nome: {aluno['nome']}")
-        print(f"Nota: {aluno['nota']:.2f}")
-        print(f"Situação: {situacao(aluno['nota'])}")
-        print(f"Desempenho: {desempenho(aluno['nota'])}")
+        print(f"Nota: {nota:.2f}")
+        print(f"Situação: {situacao(nota)}")
+        print(f"Desempenho: {desempenho(nota)}")
 
-
-# ============================================
-# 8 - ALTERAR NOTA
-# ============================================
 
 def alterar_nota():
-
     print("\n========================================")
     print("ALTERAR NOTA")
     print("========================================")
 
-    if len(alunos) == 0:
-        print("Nenhum aluno cadastrado.")
+    aluno = selecionar_aluno()
+
+    if aluno is None:
         return
 
-    nome = input("Digite o nome do aluno: ").strip()
-
-    encontrados = buscar_aluno(nome)
-
-    if len(encontrados) == 0:
-        print("Erro: aluno não encontrado.")
-        return
-
-    if len(encontrados) > 1:
-
-        print("\nForam encontrados vários alunos:")
-
-        for i, aluno in enumerate(encontrados):
-            print(f"{i + 1} - {aluno['nome']} - Nota: {aluno['nota']:.2f}")
-
-        while True:
-            try:
-                escolha = int(input("\nEscolha o número do aluno: "))
-
-                if escolha < 1 or escolha > len(encontrados):
-                    print("Erro: escolha uma opção válida.")
-                    continue
-
-                aluno = encontrados[escolha - 1]
-                break
-
-            except ValueError:
-                print("Erro: digite um número inteiro.")
-
-    else:
-        # Só existe um aluno com esse nome
-        aluno = encontrados[0]
-
-    print(f"\nNota atual: {aluno['nota']:.2f}")
+    print(f"\nAluno: {aluno['nome']}")
+    print(f"Nota atual: {aluno['nota']:.2f}")
 
     while True:
-
         try:
             nova_nota = float(
                 input("Digite a nova nota: ").replace(",", ".")
@@ -415,13 +353,86 @@ def alterar_nota():
             print("Erro: digite uma nota válida.")
 
 
+def editar_aluno():
+    print("\n========================================")
+    print("EDITAR ALUNO")
+    print("========================================")
 
-# ============================================
-# 9 - GERAR RELATÓRIO COMPLETO
-# ============================================
+    aluno = selecionar_aluno()
+
+    if aluno is None:
+        return
+
+    print(f"\nNome atual: {aluno['nome']}")
+    print(f"Nota atual: {aluno['nota']:.2f}")
+
+    while True:
+        novo_nome = input(
+            "Digite o novo nome ou pressione Enter para manter: "
+        ).strip()
+
+        if novo_nome == "":
+            break
+
+        aluno["nome"] = novo_nome
+        break
+
+    while True:
+        try:
+            nova_nota = input(
+                "Digite a nova nota ou pressione Enter para manter: "
+            ).strip()
+
+            if nova_nota == "":
+                break
+
+            nova_nota = float(nova_nota.replace(",", "."))
+
+            if nova_nota < 0 or nova_nota > 10:
+                print("Erro: a nota deve estar entre 0 e 10.")
+                continue
+
+            aluno["nota"] = nova_nota
+            break
+
+        except ValueError:
+            print("Erro: digite uma nota válida.")
+
+    print("Aluno alterado com sucesso!")
+
+
+def excluir_aluno():
+    print("\n========================================")
+    print("EXCLUIR ALUNO")
+    print("========================================")
+
+    aluno = selecionar_aluno()
+
+    if aluno is None:
+        return
+
+    print(f"\nAluno selecionado: {aluno['nome']}")
+    print(f"Nota: {aluno['nota']:.2f}")
+
+    while True:
+        confirmacao = input(
+            "Tem certeza que deseja excluir? (s/n): "
+        ).strip().lower()
+
+        if confirmacao == "s":
+            alunos.remove(aluno)
+            print("Aluno excluído com sucesso!")
+            break
+
+        elif confirmacao == "n":
+            print("Exclusão cancelada.")
+            break
+
+        else:
+            print("Digite apenas 's' ou 'n'.")
+
 
 def gerar_relatorio_completo():
-
     print("\n========================================")
     print("RELATÓRIO DA TURMA")
     print("========================================")
@@ -436,7 +447,6 @@ def gerar_relatorio_completo():
     reprovados = 0
 
     for aluno in alunos:
-
         notas.append(aluno["nota"])
 
         if aluno["nota"] >= 6:
@@ -447,17 +457,11 @@ def gerar_relatorio_completo():
     total = len(alunos)
 
     media = sum(notas) / total
-
     maior_nota = max(notas)
-
     menor_nota = min(notas)
-
     mediana = statistics.median(notas)
-
     amplitude = maior_nota - menor_nota
-
     percentual_aprovacao = (aprovados / total) * 100
-
     percentual_reprovacao = (reprovados / total) * 100
 
     print(f"Total de alunos: {total}")
@@ -478,9 +482,7 @@ def gerar_relatorio_completo():
     encontrou = False
 
     for aluno in alunos:
-
         if aluno["nota"] > media:
-
             print(
                 f"{aluno['nome']} "
                 f"{aluno['nota']:.2f}"
@@ -504,7 +506,6 @@ def gerar_relatorio_completo():
     quantidade_top = min(3, len(ranking_alunos))
 
     for i in range(quantidade_top):
-
         aluno = ranking_alunos[i]
 
         print(
@@ -516,14 +517,61 @@ def gerar_relatorio_completo():
     print("========================================")
 
 
-# ============================================
-# MENU PRINCIPAL
-# ============================================
+def prova_recuperacao():
+    print("\n========================================")
+    print("PROVA DE RECUPERAÇÃO")
+    print("========================================")
+
+    aluno = selecionar_aluno()
+
+    if aluno is None:
+        return
+
+    print(f"\nAluno: {aluno['nome']}")
+    print(f"Nota atual: {aluno['nota']:.2f}")
+
+    acertos = 0
+
+    print("\nQuestão 1: Quanto é 2 + 2?")
+    print("a) 3")
+    print("b) 4")
+    print("c) 5")
+
+    resposta1 = input("Resposta: ").strip().lower()
+
+    if resposta1 == "b":
+        print("Resposta correta!")
+        acertos += 1
+    else:
+        print("Resposta incorreta!")
+
+    print("\nQuestão 2: Quanto é 1 + 1?")
+    print("a) 3")
+    print("b) 2")
+    print("c) 5")
+
+    resposta2 = input("Resposta: ").strip().lower()
+
+    if resposta2 == "b":
+        print("Resposta correta!")
+        acertos += 1
+    else:
+        print("Resposta incorreta!")
+
+    print(f"\nVocê acertou {acertos} de 2 questões.")
+
+    if acertos == 2:
+        aluno["nota"] = 10
+        print("Você passou de ano!")
+        print("Nota alterada para 10.00.")
+
+    else:
+        print("Você não atingiu a pontuação necessária.")
+        print(f"Nota permanece: {aluno['nota']:.2f}")
+
 
 def menu():
-
     while True:
-
         print("\n========================================")
         print("SISTEMA DE ANÁLISE DE NOTAS")
         print("========================================")
@@ -537,60 +585,57 @@ def menu():
         print("7 - Consultar aluno")
         print("8 - Alterar nota")
         print("9 - Gerar relatório completo")
-        print("10 - Sair")
+        print("10 - Prova de recuperação")
+        print("11 - Editar aluno")
+        print("12 - Excluir aluno")
+        print("13 - Sair")
 
         opcao = input("\nDigite uma opção: ").strip()
 
         if opcao == "1":
-
             cadastrar_alunos()
 
         elif opcao == "2":
-
             listar_alunos()
 
         elif opcao == "3":
-
             estatisticas()
 
         elif opcao == "4":
-
             alunos_acima_media()
 
         elif opcao == "5":
-
             distribuicao_notas()
 
         elif opcao == "6":
-
             ranking()
 
         elif opcao == "7":
-
             consultar_aluno()
 
         elif opcao == "8":
-
             alterar_nota()
 
         elif opcao == "9":
-
             gerar_relatorio_completo()
 
         elif opcao == "10":
+            prova_recuperacao()
 
+        elif opcao == "11":
+            editar_aluno()
+
+        elif opcao == "12":
+            excluir_aluno()
+
+        elif opcao == "13":
             print("\nPrograma encerrado.")
             print("Até mais!")
-
             break
 
         else:
-
             print("\nErro: opção inválida.")
 
 
-# ============================================
-# INÍCIO DO PROGRAMA
-# ============================================
-
 menu()
+
